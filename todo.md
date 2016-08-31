@@ -6,4 +6,4 @@ Python GroupMe Bot
 - [ ] Working within chat
 - [ ] Parse text for commands
 - [ ] Take commands
-- [x ] Spawn more meeseeks
+- [x] Spawn more meeseeks
