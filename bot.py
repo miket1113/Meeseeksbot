@@ -1,9 +1,8 @@
-#Author Mike Terranova
-
 import BaseHTTPServer
 import urlparse
 import json
 import requests
+from random import randint
 
 def run_while_true(server_class=BaseHTTPServer.HTTPServer, handler_class=BaseHTTPServer.BaseHTTPRequestHandler):
     server_address = ('', )
@@ -48,14 +47,54 @@ class handler(BaseHTTPServer.BaseHTTPRequestHandler):
         message = json.loads(self.data_string)
         if not 'text' in message:
             return
-        text = message['text']
-        print "INCOMING TEXT: " + text
-        if 'Meeseeks' in text:
-            payload = {"bot_id":"","text":"YESSIRREE!"}
-            r = requests.post('https://api.groupme.com/v3/bots/post', data=json.dumps(payload))
-            print "did it"
-        else:
-            print 'didnt do it'
+        text = message['text'].lower()
+        if message['sender_type'] == 'bot':
             return
+        print "INCOMING TEXT: " + message['text']
+        if 'mr.meeseeks' in text:
+            payload = {"bot_id":""}
+            if 'hello' in text:
+                payload["text"] = "Hi I'm Mr.Meeseeks! Look at me!"
+                print '> said hello'
+            if 'show' in text and 'me' in text and 'what' in text:
+                payload["text"] = "I'm Mr. Meeseeks! Commands are:\nHello\ncan you\ncode \n google ( Mr.Meeseeks google ...\n trying)"
+                print '> showed commands'
+            if 'can' in text and 'you' in text:
+                x = randint(1,2)
+                if x == 1:
+                    y = 'CAAAANNNN DOOoooOO'
+                else: 
+                    y = "YESSIRREEE"
+                payload["text"] = y
+                print '> can do'
+            if 'google' in text:
+                payload['text'] = " Look at me! Heres your search!\n" + lmgtfy(text)
+                print "googled that for ya"
+            if 'trying' in text:
+                payload['text'] = "ooooooooooooo he's trying!" 
+                print 'oo tryin'
+            if 'code' in text:
+                payload['text'] = "I'm Mr.Meeseeks! Look at me! https://github.com/miket1113/Meeseeksbot"
+                print '> showed github'
+
+            if 'text' in payload:
+                r = requests.post('https://api.groupme.com/v3/bots/post', data=json.dumps(payload))
+
+def lmgtfy(text):
+    searchText = []
+    baseURL = "http://lmgtfy.com/?q="
+    for word in text.split(' '):
+        searchText.append(word)
+    searchText.pop(0)
+    searchText.pop(1)
+    for searchWord in searchText:
+        baseURL+=searchWord
+        baseURL+='+'
+    newURL = baseURL
+    return newURL
+
+
+
+
 
 run_while_true(BaseHTTPServer.HTTPServer,handler)
