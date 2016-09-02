@@ -86,7 +86,7 @@ def lmgtfy(text):
     for word in text.split(' '):
         searchText.append(word)
     searchText.pop(0)
-    searchText.pop(1)
+    searchText.pop(0)
     for searchWord in searchText:
         baseURL+=searchWord
         baseURL+='+'
