@@ -1,11 +1,13 @@
+#@author Michael Terranova
+#@author Chance Henderson
 import BaseHTTPServer
 import urlparse
 import json
 import requests
 from random import randint
-
+"""createds the server we will  be using"""
 def run_while_true(server_class=BaseHTTPServer.HTTPServer, handler_class=BaseHTTPServer.BaseHTTPRequestHandler):
-    server_address = ('', )
+    server_address = ('',#port number required here ) 
     httpd = server_class(server_address, handler_class)
     while True:
         httpd.handle_request()
@@ -38,10 +40,12 @@ class handler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(message)
         return
-    
+    """ Parsing to get the data from GroupMe"""
     def parse_POST(self):
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
-
+    """this is where the bot will look through the incoming text, decide if its called upon, then execute a command
+    the command must contain "Mr.Meeseeks" and the command in the sae sentence, bot will currently only complete the last given command in the 
+    message. Ex: "Mr.Meeseeks can you code?" will just give you the source code of the bot"""
     def do_POST(self):
         self.parse_POST()
         message = json.loads(self.data_string)
@@ -79,7 +83,7 @@ class handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
             if 'text' in payload:
                 r = requests.post('https://api.groupme.com/v3/bots/post', data=json.dumps(payload))
-
+""" A function to googlee something useing the LMGTFY website"""
 def lmgtfy(text):
     searchText = []
     baseURL = "http://lmgtfy.com/?q="
